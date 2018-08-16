@@ -1,8 +1,15 @@
 onLoadMessage := s"Welcome to sbt-scalafix ${version.value}"
-moduleName := "sbt-scalafix"
+
+def scalafixVersion: String = sys.env.get("TRAVIS_TAG") match {
+  case Some(v) if v.nonEmpty => v.stripPrefix("v")
+  case _ => "0.6.0-M14+3-a0dfc53e-SNAPSHOT"
+}
 
 // Publish settings
 organization := "ch.epfl.scala"
+moduleName := "sbt-scalafix"
+version := scalafixVersion
+
 homepage := Some(url("https://github.com/scalacenter/sbt-scalafix"))
 licenses := List(
   "Apache-2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0")
@@ -20,11 +27,6 @@ commands += Command.command("ci-windows") { s =>
   "testOnly -- -l SkipWindows" ::
     "scripted" ::
     s
-}
-
-def scalafixVersion: String = sys.env.get("TRAVIS_TAG") match {
-  case Some(v) if v.nonEmpty => v.stripPrefix("v")
-  case _ => "0.6.0-M14"
 }
 
 // Dependencies
